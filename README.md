@@ -1,4 +1,4 @@
-./test 1234
+// entrada ./test 1234
 
 
 
