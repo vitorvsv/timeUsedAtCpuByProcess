@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 // Biblioteca que contém constante HZ (número de jiffies por segundo).
 #include <sys/param.h>
@@ -70,7 +71,7 @@ int memoriaEmKb2 = 0;
 // PAGE_SIZE
 
         // Obtém o uso de memória em Kbytes. Tamanho de página = 4 KB.
-        memoriaEmKb = numeroDePaginasMemoria * 4;
+        memoriaEmKb = numeroDePaginasMemoria * (getpagesize() / 1024);
     }
 
     memoriaEmKb = (memoriaEmKb * 100) / 1659768;
