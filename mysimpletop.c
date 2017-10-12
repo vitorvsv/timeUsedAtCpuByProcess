@@ -1,3 +1,4 @@
+cat /proc/meminfo | awk '{print $2}' | head -1
 #include <pthread.h>
 #include <stdio.h>
 #include <string.h>
