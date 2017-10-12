@@ -1,28 +1,3 @@
-int GetRamInKB(void)
-{
-    FILE *meminfo = fopen("/proc/meminfo", "r");
-    if(meminfo == NULL)
-        ... // handle error
-
-    char line[256];
-    while(fgets(line, sizeof(line), meminfo))
-    {
-        int ram;
-        if(sscanf(line, "MemTotal: %d kB", &ram) == 1)
-        {
-            fclose(meminfo);
-            return ram;
-        }
-    }
-
-    // If we got here, then we couldn't find the proper line in the meminfo file:
-    // do something appropriate like return an error code, throw an exception, etc.
-    fclose(meminfo);
-    return -1;
-}
-
-
-cat /proc/meminfo | awk '{print $2}' | head -1
 #include <pthread.h>
 #include <stdio.h>
 #include <string.h>
@@ -70,7 +45,6 @@ float obterUsoDaCPUPeloProcesso(int pid, int tempoAtualizacao)
 
     porcentagem = (( (jiffiesTotal2 - jiffiesTotal1) / (HZ * tempoAtualizacao) ) * 100.00);
 
-
     return porcentagem;
 }
 
@@ -81,7 +55,6 @@ int obtemMemoriaTotalProcesso(int pid)
     char nomeArquivo[100];
     int numeroDePaginasMemoria;
     int memoriaEmKb = 0;
-int memoriaEmKb2 = 0;
 
     // Obtém o nome do arquivo.
     sprintf(nomeArquivo, "/proc/%d/statm", pid);
@@ -93,16 +66,37 @@ int memoriaEmKb2 = 0;
 
         fclose(statm);
 
-// PAGE_SIZE
-
-        // Obtém o uso de memória em Kbytes. Tamanho de página = 4 KB.
+        // Obtém o uso de memória em Kbytes.
         memoriaEmKb = numeroDePaginasMemoria * (getpagesize() / 1024);
     }
 
-    memoriaEmKb = (memoriaEmKb * 100) / 1659768;
+    // obter a memoria
+    memoriaEmKb = (memoriaEmKb * 100) / GetRamInKB();
 
     return memoriaEmKb;
 }
+
+int GetRamInKB(void)
+{
+    FILE *meminfo = fopen("/proc/meminfo", "r");
+    
+    char line[256];
+    while(fgets(line, sizeof(line), meminfo))
+    {
+        int ram;
+        if(sscanf(line, "MemTotal: %d kB", &ram) == 1)
+        {
+            fclose(meminfo);
+            return ram;
+        }
+    }
+
+    // If we got here, then we couldn't find the proper line in the meminfo file:
+    // do something appropriate like return an error code, throw an exception, etc.
+    fclose(meminfo);
+    return -1;
+}
+
 
 int main (int argc, char *argv[])
 {
@@ -122,7 +116,7 @@ int main (int argc, char *argv[])
         if (i < 10){
             printf("0");
         }
-        printf("%d |   %d  | %d Kb    %.1f %  \n", i, pid, obtemMemoriaTotalProcesso(pid), obterUsoDaCPUPeloProcesso(pid, tempo_atualizacao));
+        printf("%d |   %d  | %d %  |  %.1f %  \n", i, pid, obtemMemoriaTotalProcesso(pid), obterUsoDaCPUPeloProcesso(pid, tempo_atualizacao));
         i++;
     }
 }
