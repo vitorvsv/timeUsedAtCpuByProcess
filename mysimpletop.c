@@ -31,7 +31,6 @@ float obterUsoDaCPUPeloProcesso(int pid, int tempoAtualizacao)
         // Soma total de jiffies.
         jiffiesTotal1 = (float)(jiffiesUsuario + jiffiesKernel);
     }
-
     sleep(tempoAtualizacao);
 
     // Abre aquivo /proc/PID/stat.
@@ -42,7 +41,6 @@ float obterUsoDaCPUPeloProcesso(int pid, int tempoAtualizacao)
         // Soma total de jiffies.
         jiffiesTotal2 = (float)(jiffiesUsuario + jiffiesKernel);
     }
-
     porcentagem = (( (jiffiesTotal2 - jiffiesTotal1) / (HZ * tempoAtualizacao) ) * 100.00);
 
     return porcentagem;
@@ -69,7 +67,6 @@ int obtemMemoriaTotalProcesso(int pid)
         // Obtém o uso de memória em Kbytes.
         memoriaEmKb = numeroDePaginasMemoria * (getpagesize() / 1024);
     }
-
     // obter a memoria
     memoriaEmKb = (memoriaEmKb * 100) / GetRamInKB();
 
@@ -91,8 +88,6 @@ int GetRamInKB(void)
         }
     }
 
-    // If we got here, then we couldn't find the proper line in the meminfo file:
-    // do something appropriate like return an error code, throw an exception, etc.
     fclose(meminfo);
     return -1;
 }
@@ -116,7 +111,7 @@ int main (int argc, char *argv[])
         if (i < 10){
             printf("0");
         }
-        printf("%d |   %d  | %d %  |  %.1f %  \n", i, pid, obtemMemoriaTotalProcesso(pid), obterUsoDaCPUPeloProcesso(pid, tempo_atualizacao));
+        printf("%d |   %d  |    %d   %  |  %.1f   %  \n", i, pid, obtemMemoriaTotalProcesso(pid), obterUsoDaCPUPeloProcesso(pid, tempo_atualizacao));
         i++;
     }
 }
