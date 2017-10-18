@@ -1,3 +1,11 @@
+//////////////////////////////////////////////////////////////////////
+//			        Alessandro Antoniolli		                    //
+//			        Monica Chiesa				                    //
+//			        Thainan Fagundes Brum	                	    //
+//			        Vitor Vian				                        //
+//////////////////////////////////////////////////////////////////////
+
+
 #include <pthread.h>
 #include <stdio.h>
 #include <string.h>
