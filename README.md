@@ -1,12 +1,12 @@
 # Compiling file by gcc (Linux)
 
 ``cd project_folder/`` <br/>
-``gcc timeUsedAtCpuByProcess.c -o timeusedprocess`` <br/>
-``sudo chmod +x timeusedprocess``  <br/>
-``sudo mv timeusedprocess /usr/bin/timeusedprocess``
+``gcc timeUsedAtCpuByProcess.c -o mysimpletop`` <br/>
+``sudo chmod +x mysimpletop``  <br/>
+``sudo mv mysimpletop /usr/bin/``
 
 # Returning memory and CPU use by a specify process
 
-``timeusedprocess PID_PROCESS``
+``mysimpletop PID_PROCESS``
 
 This is great!
