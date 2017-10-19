@@ -1,9 +1,16 @@
-// entrada ./test 1234
+//////////////////////////////////////////////////////////////////////
+//			        Alessandro Antoniolli		                            //
+//			        Monica Chiesa				                                //
+//			        Thainan Fagundes Brum	                	            //
+//			        Vitor Vian				                                  //
+//////////////////////////////////////////////////////////////////////
+
 
 #include <pthread.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 // Biblioteca que contém constante HZ (número de jiffies por segundo).
 #include <sys/param.h>
@@ -32,7 +39,6 @@ float obterUsoDaCPUPeloProcesso(int pid, int tempoAtualizacao)
         // Soma total de jiffies.
         jiffiesTotal1 = (float)(jiffiesUsuario + jiffiesKernel);
     }
-
     sleep(tempoAtualizacao);
 
     // Abre aquivo /proc/PID/stat.
@@ -43,9 +49,7 @@ float obterUsoDaCPUPeloProcesso(int pid, int tempoAtualizacao)
         // Soma total de jiffies.
         jiffiesTotal2 = (float)(jiffiesUsuario + jiffiesKernel);
     }
-
-    // NO FINAL FOI FEITA DIVISÃO POR 4, POIS SÃO 4 NÚCLEOS
-    porcentagem = (( (jiffiesTotal2 - jiffiesTotal1) / (HZ * tempoAtualizacao) ) * 100.00) / 4;
+    porcentagem = (( (jiffiesTotal2 - jiffiesTotal1) / (HZ * tempoAtualizacao) ) * 100.00);
 
     return porcentagem;
 }
@@ -64,15 +68,38 @@ int obtemMemoriaTotalProcesso(int pid)
     // Abre o arquivo statm do processo.
     if ( (statm = fopen(nomeArquivo, "r")) != NULL )
     {
-        fscanf(statm, "%d\t%d\t%d", &vNULLI, &vNULLI, &numeroDePaginasMemoria);
+        fscanf(statm, "%d\t%d\t%d", &vNULLI, &numeroDePaginasMemoria, &vNULLI);
 
         fclose(statm);
 
-        // Obtém o uso de memória em Kbytes. Tamanho de página = 4 KB.
-        memoriaEmKb = numeroDePaginasMemoria * 4;
+        // Obtém o uso de memória em Kbytes.
+        memoriaEmKb = numeroDePaginasMemoria * (getpagesize() / 1024);
     }
+    // obter a memoria
+    memoriaEmKb = (memoriaEmKb * 100) / GetRamInKB();
+
     return memoriaEmKb;
 }
+
+int GetRamInKB(void)
+{
+    FILE *meminfo = fopen("/proc/meminfo", "r");
+
+    char line[256];
+    while(fgets(line, sizeof(line), meminfo))
+    {
+        int ram;
+        if(sscanf(line, "MemTotal: %d kB", &ram) == 1)
+        {
+            fclose(meminfo);
+            return ram;
+        }
+    }
+
+    fclose(meminfo);
+    return -1;
+}
+
 
 int main (int argc, char *argv[])
 {
@@ -92,7 +119,7 @@ int main (int argc, char *argv[])
         if (i < 10){
             printf("0");
         }
-        printf("%d |   %d  | %d KB | %f |\n", i, pid, obtemMemoriaTotalProcesso(pid), obterUsoDaCPUPeloProcesso(pid, tempo_atualizacao));
+        printf("%d |   %d  |    %d   %  |  %.1f   %  \n", i, pid, obtemMemoriaTotalProcesso(pid), obterUsoDaCPUPeloProcesso(pid, tempo_atualizacao));
         i++;
     }
 }
