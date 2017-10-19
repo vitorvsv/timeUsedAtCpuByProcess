@@ -1,10 +1,9 @@
 //////////////////////////////////////////////////////////////////////
-//			        Alessandro Antoniolli		                    //
-//			        Monica Chiesa				                    //
-//			        Thainan Fagundes Brum	                	    //
-//			        Vitor Vian				                        //
+//			        Alessandro Antoniolli		                            //
+//			        Monica Chiesa				                                //
+//			        Thainan Fagundes Brum	                	            //
+//			        Vitor Vian				                                  //
 //////////////////////////////////////////////////////////////////////
-
 
 #include <pthread.h>
 #include <stdio.h>
@@ -98,7 +97,6 @@ int GetRamInKB(void)
     fclose(meminfo);
     return -1;
 }
-
 
 int main (int argc, char *argv[])
 {
