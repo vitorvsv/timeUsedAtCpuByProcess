@@ -1,8 +1,8 @@
 //////////////////////////////////////////////////////////////////////
-//			        Alessandro Antoniolli		                            //
-//			        Monica Chiesa				                                //
-//			        Thainan Fagundes Brum	                	            //
-//			        Vitor Vian				                                  //
+//			        Alessandro Antoniolli		                    //
+//			        Monica Chiesa				                    //
+//			        Thainan Fagundes Brum	                	    //
+//			        Vitor Vian				                        //
 //////////////////////////////////////////////////////////////////////
 
 
@@ -84,7 +84,6 @@ int obtemMemoriaTotalProcesso(int pid)
 int GetRamInKB(void)
 {
     FILE *meminfo = fopen("/proc/meminfo", "r");
-
     char line[256];
     while(fgets(line, sizeof(line), meminfo))
     {
